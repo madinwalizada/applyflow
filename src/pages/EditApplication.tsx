@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { JobApplication, ApplicationStatus } from "../types/application";
+import type { ApplicationStatus } from "../types/application";
 import { supabase } from "../lib/supabase";
 
 function EditApplication() {

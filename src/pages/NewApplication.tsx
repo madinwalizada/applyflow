@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { JobApplication, ApplicationStatus } from "../types/application";
+import type { ApplicationStatus } from "../types/application";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 
