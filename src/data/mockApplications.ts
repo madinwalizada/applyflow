@@ -1,0 +1,34 @@
+import type { JobApplication } from "../types/application";
+
+export const mockApplications: JobApplication[] = [
+  {
+    id: 1,
+    company: "Google",
+    position: "Frontend Developer",
+    status: "Applied",
+    location: "Remote",
+    jobLink: "https://example.com/google-job",
+    salary: "$120k",
+    dateApplied: "2025-04-10",
+  },
+  {
+    id: 2,
+    company: "Meta",
+    position: "React Developer",
+    status: "Interview",
+    location: "San Francisco",
+    jobLink: "https://example.com/meta-job",
+    salary: "$140k",
+    dateApplied: "2025-04-10",
+  },
+  {
+    id: 3,
+    company: "Airbnb",
+    position: "UI Engineer",
+    status: "Rejected",
+    location: "Remote",
+    jobLink: "https://example.com/airbnb-job",
+    salary: "$130k",
+    dateApplied: "2025-04-10",
+  },
+];
