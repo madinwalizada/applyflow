@@ -4,7 +4,7 @@ A full-stack job application tracker built with React, TypeScript, and Supabase.
 
 ## Live Demo
 
-https://applyflow-something.vercel.app
+https://applyflow-delta.vercel.app/
 
 ## About
 
