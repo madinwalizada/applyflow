@@ -36,7 +36,7 @@ function App() {
   }
 
   // If not logged in, show auth page
-  if (!session) {
+  if (!session || window.location.pathname === "/reset-password") {
     return (
       <Routes>
         <Route path="/reset-password" element={<ResetPassword />} />
