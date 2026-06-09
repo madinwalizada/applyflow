@@ -7,6 +7,7 @@ import Wishlist from "./pages/Wishlist";
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/supabase";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import type { Session } from "@supabase/supabase-js";
 
 function App() {
@@ -36,7 +37,12 @@ function App() {
 
   // If not logged in, show auth page
   if (!session) {
-    return <Auth />;
+    return (
+      <Routes>
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="*" element={<Auth />} />
+      </Routes>
+    );
   }
 
   return (

@@ -651,6 +651,16 @@ input::placeholder {
   border-left: 3px solid var(--red);
 }
 
+.form-success {
+  background: #f0fdf4;
+  border-left: 3px solid #16a34a;
+  color: #16a34a;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
 .form-actions {
   display: flex;
   gap: 8px;
