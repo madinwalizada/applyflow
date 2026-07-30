@@ -35,6 +35,7 @@ function Dashboard({ session }: DashboardProps) {
           position: item.position,
           status: item.status,
           location: item.location,
+          workType: item.work_type,
           jobLink: item.job_link,
           salary: item.salary,
           dateApplied: item.date_applied,

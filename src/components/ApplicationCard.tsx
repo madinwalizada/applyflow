@@ -25,6 +25,15 @@ function ApplicationCard({ application, onDelete }: ApplicationCardProps) {
       {application.location && (
         <p className="application-meta">Location: {application.location}</p>
       )}
+      {application.workType && (
+        <span
+          className={`work-type-badge work-type-${application.workType
+            .toLowerCase()
+            .replace("-", "")}`}
+        >
+          {application.workType}
+        </span>
+      )}
 
       {application.salary && (
         <p className="application-meta">Salary: {application.salary}</p>

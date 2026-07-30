@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { ApplicationStatus } from "../types/application";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
+import type { ApplicationStatus, WorkType } from "../types/application";
 
 type NewApplicationProps = {
   session: Session;
@@ -17,7 +17,7 @@ function NewApplication({ session }: NewApplicationProps) {
   const [salary, setSalary] = useState("");
   const [error, setError] = useState("");
   const [dateApplied, setDateApplied] = useState("");
-
+  const [workType, setWorkType] = useState<WorkType | "">("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -36,6 +36,7 @@ function NewApplication({ session }: NewApplicationProps) {
       position: position.trim(),
       status,
       location: location.trim(),
+      work_type: workType || null,
       job_link: jobLink.trim(),
       salary: salary.trim(),
       date_applied: dateApplied,
@@ -100,6 +101,20 @@ function NewApplication({ session }: NewApplicationProps) {
               onChange={(e) => setLocation(e.target.value)}
               placeholder="e.g. Remote, New York"
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="workType">Work type</label>
+            <select
+              id="workType"
+              value={workType}
+              onChange={(e) => setWorkType(e.target.value as WorkType | "")}
+            >
+              <option value="">Not specified</option>
+              <option value="Remote">Remote</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="On-site">On-site</option>
+            </select>
           </div>
 
           <div className="form-group">

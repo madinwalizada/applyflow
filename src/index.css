@@ -891,3 +891,23 @@ input::placeholder {
 .auth-switch-btn:hover {
   text-decoration: underline;
 }
+
+.work-type-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.work-type-remote {
+  background: #e5e7eb;
+  color: #374151;
+}
+.work-type-hybrid {
+  background: #fce7f3;
+  color: #be185d;
+}
+.work-type-onsite {
+  background: #dbeafe;
+  color: #1d4ed8;
+}

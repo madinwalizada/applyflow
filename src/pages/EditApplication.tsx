@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { ApplicationStatus } from "../types/application";
+import type { ApplicationStatus, WorkType } from "../types/application";
 import { supabase } from "../lib/supabase";
 
 function EditApplication() {
@@ -15,6 +15,7 @@ function EditApplication() {
   const [salary, setSalary] = useState("");
   const [error, setError] = useState("");
   const [dateApplied, setDateApplied] = useState("");
+  const [workType, setWorkType] = useState<WorkType | "">("");
 
   useEffect(() => {
     const fetchApplication = async () => {
@@ -36,6 +37,7 @@ function EditApplication() {
       setJobLink(data.job_link || "");
       setSalary(data.salary || "");
       setDateApplied(data.date_applied || "");
+      setWorkType(data.work_type || "");
     };
 
     fetchApplication();
@@ -61,6 +63,7 @@ function EditApplication() {
         job_link: jobLink.trim(),
         salary: salary.trim(),
         date_applied: dateApplied,
+        work_type: workType || null,
       })
       .eq("id", Number(id));
 
@@ -122,6 +125,20 @@ function EditApplication() {
               onChange={(e) => setLocation(e.target.value)}
               placeholder="e.g. Remote, New York"
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="workType">Work type</label>
+            <select
+              id="workType"
+              value={workType}
+              onChange={(e) => setWorkType(e.target.value as WorkType | "")}
+            >
+              <option value="">Not specified</option>
+              <option value="Remote">Remote</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="On-site">On-site</option>
+            </select>
           </div>
 
           <div className="form-group">
