@@ -1,4 +1,9 @@
-export type ApplicationStatus = "Applied" | "Interview" | "Offer" | "Rejected";
+export type ApplicationStatus =
+  | "Saved"
+  | "Applied"
+  | "Interview"
+  | "Offer"
+  | "Rejected";
 export type WorkType = "Remote" | "Hybrid" | "On-site";
 
 export type JobApplication = {
@@ -11,6 +16,7 @@ export type JobApplication = {
   jobLink: string;
   salary: string;
   dateApplied: string;
+  applicationDeadline: string | null;
 };
 
 export type WishlistItem = {

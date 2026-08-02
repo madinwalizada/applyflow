@@ -39,6 +39,7 @@ function Dashboard({ session }: DashboardProps) {
           jobLink: item.job_link,
           salary: item.salary,
           dateApplied: item.date_applied,
+          applicationDeadline: item.application_deadline, // ← add this
         }));
         setApplications(mapped);
       }
@@ -84,10 +85,17 @@ function Dashboard({ session }: DashboardProps) {
     interview: applications.filter((a) => a.status === "Interview").length,
     offer: applications.filter((a) => a.status === "Offer").length,
     rejected: applications.filter((a) => a.status === "Rejected").length,
+    saved: applications.filter((a) => a.status === "Saved").length,
   };
 
   const statCards = [
     { label: "Total", key: "All" as const, value: counts.total, cls: "" },
+    {
+      label: "Saved",
+      key: "Saved" as const,
+      value: counts.saved,
+      cls: "stat-saved",
+    },
     {
       label: "Applied",
       key: "Applied" as const,
@@ -115,6 +123,7 @@ function Dashboard({ session }: DashboardProps) {
   ];
 
   const kanbanCols: Array<{ status: ApplicationStatus; label: string }> = [
+    { status: "Saved", label: "Saved" },
     { status: "Applied", label: "Applied" },
     { status: "Interview", label: "Interview" },
     { status: "Offer", label: "Offer" },
@@ -201,6 +210,7 @@ function Dashboard({ session }: DashboardProps) {
             <option value="Interview">Interview</option>
             <option value="Offer">Offer</option>
             <option value="Rejected">Rejected</option>
+            <option value="Saved">Saved</option>
           </select>
         </div>
 

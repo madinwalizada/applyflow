@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import type { WishlistItem } from "../types/application";
+import type { JobApplication } from "../types/application";
 import type { Session } from "@supabase/supabase-js";
 
 type WishlistProps = {
@@ -8,52 +9,68 @@ type WishlistProps = {
 };
 
 function Wishlist({ session }: WishlistProps) {
-  const [items, setItems] = useState<WishlistItem[]>([]);
+  const [items, setItems] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [company, setCompany] = useState("");
+  const [position, setPosition] = useState("");
   const [jobLink, setJobLink] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
+  const [deadline, setDeadline] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchWishlist = async () => {
+    const fetchSaved = async () => {
       const { data, error } = await supabase
-        .from("wishlist")
+        .from("applications")
         .select("*")
         .eq("user_id", session.user.id)
+        .eq("status", "Saved")
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("Error fetching wishlist:", error);
+        console.error("Error fetching saved jobs:", error);
       } else {
         const mapped = (data || []).map((item) => ({
           id: item.id,
+          company: item.company,
+          position: item.position,
+          status: item.status,
+          location: item.location,
+          workType: item.work_type,
           jobLink: item.job_link,
-          expiryDate: item.expiry_date,
+          salary: item.salary,
+          dateApplied: item.date_applied,
+          applicationDeadline: item.application_deadline,
         }));
         setItems(mapped);
       }
       setLoading(false);
     };
 
-    fetchWishlist();
+    fetchSaved();
   }, [session.user.id]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!jobLink.trim() || !expiryDate) {
-      setError("Both job link and expiry date are required.");
+    if (!company.trim() || !position.trim() || !jobLink.trim()) {
+      setError("Company, position, and job link are required.");
       return;
     }
 
     setError("");
 
     const { data, error } = await supabase
-      .from("wishlist")
+      .from("applications")
       .insert({
-        job_link: jobLink.trim(),
-        expiry_date: expiryDate,
         user_id: session.user.id,
+        company: company.trim(),
+        position: position.trim(),
+        status: "Saved",
+        job_link: jobLink.trim(),
+        application_deadline: deadline || null,
+        location: "",
+        salary: "",
+        date_applied: null,
       })
       .select()
       .single();
@@ -65,18 +82,31 @@ function Wishlist({ session }: WishlistProps) {
     }
 
     setItems((prev) => [
-      { id: data.id, jobLink: data.job_link, expiryDate: data.expiry_date },
+      {
+        id: data.id,
+        company: data.company,
+        position: data.position,
+        status: data.status,
+        location: data.location,
+        workType: data.work_type,
+        jobLink: data.job_link,
+        salary: data.salary,
+        dateApplied: data.date_applied,
+        applicationDeadline: data.application_deadline,
+      },
       ...prev,
     ]);
 
+    setCompany("");
+    setPosition("");
     setJobLink("");
-    setExpiryDate("");
+    setDeadline("");
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm("Remove this item from wishlist?")) return;
+    if (!window.confirm("Remove this saved job?")) return;
 
-    const { error } = await supabase.from("wishlist").delete().eq("id", id);
+    const { error } = await supabase.from("applications").delete().eq("id", id);
 
     if (error) {
       console.error("Error deleting:", error);
@@ -84,14 +114,6 @@ function Wishlist({ session }: WishlistProps) {
     }
 
     setItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const getDomain = (url: string) => {
-    try {
-      return new URL(url).hostname.replace("www.", "");
-    } catch {
-      return url;
-    }
   };
 
   const isExpiringSoon = (date: string) => {
@@ -119,14 +141,40 @@ function Wishlist({ session }: WishlistProps) {
   return (
     <div>
       <div className="page-header">
-        <h2>Wishlist</h2>
-        <p>Save jobs you want to apply to later</p>
+        <h2>Saved Jobs</h2>
+        <p>Jobs you want to apply to later — also visible on your board</p>
       </div>
 
       <form onSubmit={handleAdd} className="card form-card">
         {error && <div className="form-error">⚠ {error}</div>}
 
         <div className="form-grid">
+          <div className="form-group">
+            <label htmlFor="company">Company</label>
+            <input
+              id="company"
+              value={company}
+              onChange={(e) => {
+                setCompany(e.target.value);
+                if (error) setError("");
+              }}
+              placeholder="e.g. Apple"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="position">Position</label>
+            <input
+              id="position"
+              value={position}
+              onChange={(e) => {
+                setPosition(e.target.value);
+                if (error) setError("");
+              }}
+              placeholder="e.g. Frontend Engineer"
+            />
+          </div>
+
           <div className="form-group full-width">
             <label htmlFor="jobLink">Job Link</label>
             <input
@@ -142,22 +190,19 @@ function Wishlist({ session }: WishlistProps) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="expiryDate">Apply Before</label>
+            <label htmlFor="deadline">Apply Before</label>
             <input
-              id="expiryDate"
+              id="deadline"
               type="date"
-              value={expiryDate}
-              onChange={(e) => {
-                setExpiryDate(e.target.value);
-                if (error) setError("");
-              }}
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
             />
           </div>
         </div>
 
         <div className="form-actions">
           <button type="submit" className="btn btn-primary">
-            Add to Wishlist
+            Save Job
           </button>
         </div>
       </form>
@@ -169,8 +214,12 @@ function Wishlist({ session }: WishlistProps) {
       ) : (
         <div className="wishlist-list">
           {items.map((item) => {
-            const expired = isExpired(item.expiryDate);
-            const expiringSoon = isExpiringSoon(item.expiryDate);
+            const expired = item.applicationDeadline
+              ? isExpired(item.applicationDeadline)
+              : false;
+            const expiringSoon = item.applicationDeadline
+              ? isExpiringSoon(item.applicationDeadline)
+              : false;
 
             return (
               <div
@@ -186,7 +235,7 @@ function Wishlist({ session }: WishlistProps) {
                     rel="noreferrer"
                     className="wishlist-link"
                   >
-                    ↗ {getDomain(item.jobLink)}
+                    ↗ {item.company}
                   </a>
 
                   {expired && (
@@ -201,11 +250,18 @@ function Wishlist({ session }: WishlistProps) {
                   )}
                 </div>
 
-                <p className="wishlist-date">
-                  Apply before: {formatDate(item.expiryDate)}
-                </p>
+                <p className="application-position">{item.position}</p>
+
+                {item.applicationDeadline && (
+                  <p className="wishlist-date">
+                    Apply before: {formatDate(item.applicationDeadline)}
+                  </p>
+                )}
 
                 <div className="actions">
+                  <Link to={`/edit/${item.id}`} className="action-link">
+                    Edit
+                  </Link>
                   <button
                     className="action-button"
                     onClick={() => handleDelete(item.id)}

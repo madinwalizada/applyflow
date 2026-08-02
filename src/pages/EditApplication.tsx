@@ -16,6 +16,7 @@ function EditApplication() {
   const [error, setError] = useState("");
   const [dateApplied, setDateApplied] = useState("");
   const [workType, setWorkType] = useState<WorkType | "">("");
+  const [deadline, setDeadline] = useState("");
 
   useEffect(() => {
     const fetchApplication = async () => {
@@ -38,6 +39,7 @@ function EditApplication() {
       setSalary(data.salary || "");
       setDateApplied(data.date_applied || "");
       setWorkType(data.work_type || "");
+      setDeadline(data.application_deadline || "");
     };
 
     fetchApplication();
@@ -151,15 +153,27 @@ function EditApplication() {
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="dateApplied">Date Applied</label>
-            <input
-              id="dateApplied"
-              type="date"
-              value={dateApplied}
-              onChange={(e) => setDateApplied(e.target.value)}
-            />
-          </div>
+          {status === "Saved" ? (
+            <div className="form-group">
+              <label htmlFor="deadline">Apply Before</label>
+              <input
+                id="deadline"
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+              />
+            </div>
+          ) : (
+            <div className="form-group">
+              <label htmlFor="dateApplied">Date Applied</label>
+              <input
+                id="dateApplied"
+                type="date"
+                value={dateApplied}
+                onChange={(e) => setDateApplied(e.target.value)}
+              />
+            </div>
+          )}
 
           <div className="form-group full-width">
             <label htmlFor="jobLink">Job Link</label>
@@ -183,6 +197,7 @@ function EditApplication() {
               <option value="Interview">Interview</option>
               <option value="Offer">Offer</option>
               <option value="Rejected">Rejected</option>
+              <option value="Saved">Saved</option>
             </select>
           </div>
         </div>

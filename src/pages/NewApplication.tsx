@@ -158,6 +158,7 @@ function NewApplication({ session }: NewApplicationProps) {
               <option value="Interview">Interview</option>
               <option value="Offer">Offer</option>
               <option value="Rejected">Rejected</option>
+              <option value="Saved">Saved</option>
             </select>
           </div>
         </div>

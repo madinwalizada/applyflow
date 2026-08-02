@@ -9,6 +9,14 @@ type ApplicationCardProps = {
 function ApplicationCard({ application, onDelete }: ApplicationCardProps) {
   const statusClass = `status status-${application.status.toLowerCase()}`;
 
+  const deadline = application.applicationDeadline;
+  const daysLeft = deadline
+    ? Math.ceil(
+        (new Date(deadline).getTime() - new Date().getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+    : null;
+
   return (
     <div className="card application-card">
       <div className="application-header">
@@ -21,6 +29,27 @@ function ApplicationCard({ application, onDelete }: ApplicationCardProps) {
       </div>
 
       <p className="application-position">{application.position}</p>
+
+      {application.status === "Saved" && deadline && (
+        <p className="application-meta">
+          Apply before:{" "}
+          {new Date(deadline).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
+          {daysLeft !== null && daysLeft < 0 && (
+            <span className="wishlist-badge wishlist-badge-expired">
+              Expired
+            </span>
+          )}
+          {daysLeft !== null && daysLeft >= 0 && daysLeft <= 3 && (
+            <span className="wishlist-badge wishlist-badge-soon">
+              {daysLeft === 0 ? "Today!" : `${daysLeft}d left`}
+            </span>
+          )}
+        </p>
+      )}
 
       {application.location && (
         <p className="application-meta">Location: {application.location}</p>
