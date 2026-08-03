@@ -5,6 +5,7 @@ import KanbanColumn from "../components/KanbanColumn";
 import { supabase } from "../lib/supabase";
 import type { JobApplication, ApplicationStatus } from "../types/application";
 import type { Session } from "@supabase/supabase-js";
+import { Link } from "react-router-dom";
 
 type DashboardProps = {
   session: Session;
@@ -17,6 +18,7 @@ function Dashboard({ session }: DashboardProps) {
     "All"
   );
   const [search, setSearch] = useState("");
+  const [viewMode, setViewMode] = useState<"board" | "list">("board");
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -79,49 +81,6 @@ function Dashboard({ session }: DashboardProps) {
   const byStatus = (status: ApplicationStatus) =>
     filtered.filter((app) => app.status === status);
 
-  const counts = {
-    total: applications.length,
-    applied: applications.filter((a) => a.status === "Applied").length,
-    interview: applications.filter((a) => a.status === "Interview").length,
-    offer: applications.filter((a) => a.status === "Offer").length,
-    rejected: applications.filter((a) => a.status === "Rejected").length,
-    saved: applications.filter((a) => a.status === "Saved").length,
-  };
-
-  const statCards = [
-    { label: "Total", key: "All" as const, value: counts.total, cls: "" },
-    {
-      label: "Saved",
-      key: "Saved" as const,
-      value: counts.saved,
-      cls: "stat-saved",
-    },
-    {
-      label: "Applied",
-      key: "Applied" as const,
-      value: counts.applied,
-      cls: "stat-applied",
-    },
-    {
-      label: "Interview",
-      key: "Interview" as const,
-      value: counts.interview,
-      cls: "stat-interview",
-    },
-    {
-      label: "Offer",
-      key: "Offer" as const,
-      value: counts.offer,
-      cls: "stat-offer",
-    },
-    {
-      label: "Rejected",
-      key: "Rejected" as const,
-      value: counts.rejected,
-      cls: "stat-rejected",
-    },
-  ];
-
   const kanbanCols: Array<{ status: ApplicationStatus; label: string }> = [
     { status: "Saved", label: "Saved" },
     { status: "Applied", label: "Applied" },
@@ -165,25 +124,6 @@ function Dashboard({ session }: DashboardProps) {
         <p>Track and manage your job search pipeline</p>
       </div>
 
-      {/* Stats */}
-      <div className="stats-grid">
-        {statCards.map(({ label, key, value, cls }) => (
-          <div
-            key={key}
-            className={`stat-card ${cls} ${
-              filterStatus === key ? "active-stat" : ""
-            }`}
-            onClick={() => setFilterStatus(key)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && setFilterStatus(key)}
-          >
-            <h3>{label}</h3>
-            <p>{value}</p>
-          </div>
-        ))}
-      </div>
-
       {/* Toolbar */}
       <div className="card toolbar">
         <div className="toolbar-group">
@@ -220,35 +160,100 @@ function Dashboard({ session }: DashboardProps) {
           </button>
         )}
       </div>
-
-      {/* Kanban */}
-      <DndContext onDragEnd={handleDragEnd}>
-        <div className="kanban-board">
-          {kanbanCols.map(({ status, label }) => {
-            const cards = byStatus(status);
-            return (
-              <KanbanColumn
-                key={status}
-                status={status}
-                label={label}
-                count={cards.length}
-              >
-                {cards.length === 0 ? (
-                  <p className="empty-column">No applications</p>
-                ) : (
-                  cards.map((app) => (
-                    <DraggableCard
-                      key={app.id}
-                      application={app}
-                      onDelete={handleDeleteApplication}
-                    />
-                  ))
-                )}
-              </KanbanColumn>
-            );
-          })}
+      <div className="toolbar-group view-toggle-group">
+        <label>View</label>
+        <div className="view-toggle">
+          <button
+            type="button"
+            className={viewMode === "board" ? "view-btn active" : "view-btn"}
+            onClick={() => setViewMode("board")}
+          >
+            Board
+          </button>
+          <button
+            type="button"
+            className={viewMode === "list" ? "view-btn active" : "view-btn"}
+            onClick={() => setViewMode("list")}
+          >
+            List
+          </button>
         </div>
-      </DndContext>
+      </div>
+      {/* Kanban */}
+      {viewMode === "board" && (
+        <DndContext onDragEnd={handleDragEnd}>
+          <div className="kanban-board">
+            {kanbanCols.map(({ status, label }) => {
+              const cards = byStatus(status);
+              return (
+                <KanbanColumn
+                  key={status}
+                  status={status}
+                  label={label}
+                  count={cards.length}
+                >
+                  {cards.length === 0 ? (
+                    <p className="empty-column">No applications</p>
+                  ) : (
+                    cards.map((app) => (
+                      <DraggableCard
+                        key={app.id}
+                        application={app}
+                        onDelete={handleDeleteApplication}
+                      />
+                    ))
+                  )}
+                </KanbanColumn>
+              );
+            })}
+          </div>
+        </DndContext>
+      )}
+
+      {viewMode === "list" && (
+        <div className="card list-view">
+          <table className="app-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>Work type</th>
+                <th>Salary</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((app) => (
+                <tr key={app.id}>
+                  <td>{app.company}</td>
+                  <td>{app.position}</td>
+                  <td>
+                    <span
+                      className={`status status-${app.status.toLowerCase()}`}
+                    >
+                      {app.status}
+                    </span>
+                  </td>
+                  <td>{app.workType ?? "—"}</td>
+                  <td>{app.salary || "—"}</td>
+                  <td>
+                    {app.status === "Saved"
+                      ? app.applicationDeadline
+                      : app.dateApplied}
+                  </td>
+                  <td>
+                    <Link to={`/edit/${app.id}`} className="action-link">
+                      Edit
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
