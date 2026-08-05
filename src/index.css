@@ -973,3 +973,49 @@ input::placeholder {
 .app-table tbody tr:hover {
   background: var(--surface-2);
 }
+
+/*** Status Strip ****/
+
+.status-strip {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.status-strip-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.status-strip-item:hover {
+  border-color: var(--border-hover);
+}
+
+.status-strip-item.active {
+  background: var(--blue-light);
+  border-color: var(--blue);
+}
+
+.status-strip-count {
+  font-weight: 700;
+  font-size: 15px;
+  font-family: "DM Mono", monospace;
+  color: var(--text-primary);
+}
+
+.status-strip-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}

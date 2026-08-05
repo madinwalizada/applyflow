@@ -89,6 +89,14 @@ function Dashboard({ session }: DashboardProps) {
     { status: "Rejected", label: "Rejected" },
   ];
 
+  const statusStrip: Array<{ status: ApplicationStatus; label: string }> = [
+    { status: "Saved", label: "Saved" },
+    { status: "Applied", label: "Applied" },
+    { status: "Interview", label: "Interview" },
+    { status: "Offer", label: "Offer" },
+    { status: "Rejected", label: "Rejected" },
+  ];
+
   const handleDragEnd = async (event: any) => {
     const { active, over } = event;
 
@@ -122,6 +130,27 @@ function Dashboard({ session }: DashboardProps) {
       <div className="page-header">
         <h2>My Applications</h2>
         <p>Track and manage your job search pipeline</p>
+      </div>
+
+      {/* Status Strip */}
+      <div className="status-strip">
+        {kanbanCols.map(({ status, label }) => (
+          <button
+            key={status}
+            type="button"
+            className={`status-strip-item ${
+              filterStatus === status ? "active" : ""
+            }`}
+            onClick={() =>
+              setFilterStatus(filterStatus === status ? "All" : status)
+            }
+          >
+            <span className="status-strip-count">
+              {byStatus(status).length}
+            </span>
+            <span className="status-strip-label">{label}</span>
+          </button>
+        ))}
       </div>
 
       {/* Toolbar */}
