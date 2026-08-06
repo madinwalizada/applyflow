@@ -18,7 +18,7 @@ function Dashboard({ session }: DashboardProps) {
     "All"
   );
   const [search, setSearch] = useState("");
-  const [viewMode, setViewMode] = useState<"board" | "list">("board");
+  const [viewMode, setViewMode] = useState<"board" | "list">("list");
 
   useEffect(() => {
     const fetchApplications = async () => {

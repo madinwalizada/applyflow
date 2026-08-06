@@ -1,29 +1,28 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap");
 
-/* ── Design Tokens ─────────────────────────────── */
 :root {
   --bg: #f4f5f7;
   --surface: #ffffff;
   --surface-2: #f8f9fb;
-  --border: #e4e7ec;
-  --border-hover: #c5ccd8;
+  --border: #d1d5db;
+  --border-hover: #9ca3af;
 
   --text-primary: #111827;
   --text-secondary: #6b7280;
   --text-muted: #9ca3af;
 
-  --blue: #2563eb;
-  --blue-light: #dbeafe;
-  --blue-dark: #1d4ed8;
+  --blue: #6d5ce8;
+  --blue-light: #ede9fe;
+  --blue-dark: #5b4bc4;
 
-  --amber: #d97706;
-  --amber-light: #fef3c7;
+  --amber: #b45309;
+  --amber-light: #fcd34d;
 
-  --green: #059669;
-  --green-light: #d1fae5;
+  --green: #047857;
+  --green-light: #6ee7b7;
 
-  --red: #dc2626;
-  --red-light: #fee2e2;
+  --red: #b91c1c;
+  --red-light: #fca5a5;
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
@@ -259,7 +258,7 @@ button,
   align-items: center;
   padding: 3px 10px;
   border-radius: var(--radius-full);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.2px;
 }
@@ -392,7 +391,7 @@ select {
 input:focus,
 select:focus {
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(109, 92, 232, 0.15);
 }
 
 input::placeholder {
@@ -947,18 +946,18 @@ input::placeholder {
 .app-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .app-table th {
   text-align: left;
   padding: 10px 14px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border);
 }
 
 .app-table td {
