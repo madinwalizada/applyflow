@@ -154,43 +154,42 @@ function Dashboard({ session }: DashboardProps) {
       </div>
 
       {/* Toolbar */}
+      {/* Toolbar */}
       <div className="card toolbar">
-        <div className="toolbar-group">
-          <label htmlFor="search">Search</label>
-          <input
-            id="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Company or position…"
-          />
-        </div>
+        <div className="toolbar-left">
+          <div className="toolbar-search">
+            <span className="toolbar-search-icon">🔍</span>
+            <input
+              id="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Filter jobs..."
+            />
+          </div>
 
-        <div className="toolbar-group">
-          <label htmlFor="filterStatus">Status</label>
           <select
             id="filterStatus"
             value={filterStatus}
             onChange={(e) =>
               setFilterStatus(e.target.value as "All" | ApplicationStatus)
             }
+            style={{ width: "160px" }}
           >
             <option value="All">All statuses</option>
+            <option value="Saved">Saved</option>
             <option value="Applied">Applied</option>
             <option value="Interview">Interview</option>
             <option value="Offer">Offer</option>
             <option value="Rejected">Rejected</option>
-            <option value="Saved">Saved</option>
           </select>
+
+          {(filterStatus !== "All" || search) && (
+            <button onClick={handleClearFilters} className="clear-btn">
+              Clear
+            </button>
+          )}
         </div>
 
-        {(filterStatus !== "All" || search) && (
-          <button onClick={handleClearFilters} className="clear-btn">
-            Clear filters
-          </button>
-        )}
-      </div>
-      <div className="toolbar-group view-toggle-group">
-        <label>View</label>
         <div className="view-toggle">
           <button
             type="button"
