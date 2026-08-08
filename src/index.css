@@ -56,11 +56,6 @@ body {
 }
 
 /* ── Layout ────────────────────────────────────── */
-.app-shell {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
 
 .container {
   max-width: 1600px;
@@ -68,65 +63,51 @@ body {
   padding: 0 24px;
 }
 
-/* ── Navbar ────────────────────────────────────── */
-.navbar {
+.app-shell {
+  min-height: 100vh;
+  display: flex; /* was flex-direction: column */
+}
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
   background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  border-right: 2px solid var(--border);
+  height: 100vh;
   position: sticky;
   top: 0;
-  z-index: 100;
-  box-shadow: var(--shadow-sm);
-}
-
-.navbar-inner {
   display: flex;
-  align-items: center;
-  gap: 32px;
-  height: 60px;
+  flex-direction: column;
+  padding: 20px 16px;
 }
 
-.navbar-brand {
+.sidebar-brand {
   display: flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
   color: var(--text-primary);
+  margin-bottom: 28px;
+  padding: 0 8px;
 }
 
-.navbar-logo {
-  width: 32px;
-  height: 32px;
-  background: var(--blue);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: -0.5px;
-  flex-shrink: 0;
-}
-
-.navbar-title {
-  font-size: 18px;
+.sidebar-title {
+  font-size: 17px;
   font-weight: 700;
   letter-spacing: -0.3px;
-  color: var(--text-primary);
 }
 
-.navbar-nav {
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.sidebar-link {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-left: auto;
-}
-
-.nav-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
+  padding: 10px 12px;
   border-radius: var(--radius-md);
   text-decoration: none;
   font-size: 14px;
@@ -135,25 +116,30 @@ body {
   transition: background var(--transition), color var(--transition);
 }
 
-.nav-link:hover {
+.sidebar-link:hover {
   background: var(--bg);
-  color: var(--text-primary);
 }
 
-.nav-link.active {
+.sidebar-link.active {
   background: var(--blue-light);
-  color: var(--blue);
+  color: var(--blue-dark);
+  font-weight: 600;
 }
 
-.nav-link-primary {
-  background: var(--blue);
-  color: white;
-  padding: 7px 16px;
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
 }
 
-.nav-link-primary:hover {
-  background: var(--blue-dark);
-  color: white;
+.sidebar-new-btn {
+  width: 100%;
+}
+
+.sidebar-signout {
+  width: 100%;
 }
 
 /* ── Main Content ──────────────────────────────── */

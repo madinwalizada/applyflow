@@ -47,46 +47,45 @@ function App() {
 
   return (
     <div className="app-shell">
-      <header className="navbar">
-        <div className="container navbar-inner">
-          <NavLink to="/" className="navbar-brand">
-            <div className="navbar-logo">AF</div>
-            <span className="navbar-title">ApplyFlow</span>
+      <aside className="sidebar">
+        <NavLink to="/" className="sidebar-brand">
+          <div className="navbar-logo">AF</div>
+          <span className="sidebar-title">ApplyFlow</span>
+        </NavLink>
+
+        <nav className="sidebar-nav">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              `sidebar-link${isActive ? " active" : ""}`
+            }
+          >
+            Dashboard
           </NavLink>
 
-          <nav className="navbar-nav">
-            <NavLink
-              to="/"
-              end
-              className={({ isActive }) =>
-                `nav-link${isActive ? " active" : ""}`
-              }
-            >
-              Dashboard
-            </NavLink>
+          <NavLink
+            to="/wishlist"
+            className={({ isActive }) =>
+              `sidebar-link${isActive ? " active" : ""}`
+            }
+          >
+            Wishlist
+          </NavLink>
+        </nav>
 
-            <NavLink
-              to="/wishlist"
-              className={({ isActive }) =>
-                `nav-link${isActive ? " active" : ""}`
-              }
-            >
-              Wishlist
-            </NavLink>
-
-            <NavLink to="/new" className="nav-link nav-link-primary">
-              + New Application
-            </NavLink>
-
-            <button
-              className="btn btn-secondary btn-sm"
-              onClick={() => supabase.auth.signOut()}
-            >
-              Sign out
-            </button>
-          </nav>
+        <div className="sidebar-footer">
+          <NavLink to="/new" className="btn btn-primary sidebar-new-btn">
+            + New Application
+          </NavLink>
+          <button
+            className="btn btn-secondary btn-sm sidebar-signout"
+            onClick={() => supabase.auth.signOut()}
+          >
+            Sign out
+          </button>
         </div>
-      </header>
+      </aside>
 
       <main className="page-content">
         <div className="container">
