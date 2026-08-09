@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import { DndContext } from "@dnd-kit/core";
-import DraggableCard from "../components/DraggableCard";
-import KanbanColumn from "../components/KanbanColumn";
 import { supabase } from "../lib/supabase";
 import type { JobApplication, ApplicationStatus } from "../types/application";
 import type { Session } from "@supabase/supabase-js";
@@ -18,7 +15,6 @@ function Dashboard({ session }: DashboardProps) {
     "All"
   );
   const [search, setSearch] = useState("");
-  const [viewMode, setViewMode] = useState<"board" | "list">("list");
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -41,7 +37,7 @@ function Dashboard({ session }: DashboardProps) {
           jobLink: item.job_link,
           salary: item.salary,
           dateApplied: item.date_applied,
-          applicationDeadline: item.application_deadline, // ← add this
+          applicationDeadline: item.application_deadline,
         }));
         setApplications(mapped);
       }
@@ -50,20 +46,6 @@ function Dashboard({ session }: DashboardProps) {
 
     fetchApplications();
   }, []);
-
-  const handleDeleteApplication = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this application?"))
-      return;
-
-    const { error } = await supabase.from("applications").delete().eq("id", id);
-
-    if (error) {
-      console.error("Error deleting:", error);
-      return;
-    }
-
-    setApplications((prev) => prev.filter((app) => app.id !== id));
-  };
 
   const handleClearFilters = () => {
     setFilterStatus("All");
@@ -81,14 +63,6 @@ function Dashboard({ session }: DashboardProps) {
   const byStatus = (status: ApplicationStatus) =>
     filtered.filter((app) => app.status === status);
 
-  const kanbanCols: Array<{ status: ApplicationStatus; label: string }> = [
-    { status: "Saved", label: "Saved" },
-    { status: "Applied", label: "Applied" },
-    { status: "Interview", label: "Interview" },
-    { status: "Offer", label: "Offer" },
-    { status: "Rejected", label: "Rejected" },
-  ];
-
   const statusStrip: Array<{ status: ApplicationStatus; label: string }> = [
     { status: "Saved", label: "Saved" },
     { status: "Applied", label: "Applied" },
@@ -97,30 +71,6 @@ function Dashboard({ session }: DashboardProps) {
     { status: "Rejected", label: "Rejected" },
   ];
 
-  const handleDragEnd = async (event: any) => {
-    const { active, over } = event;
-
-    if (!over) return;
-    if (active.id === over.id) return;
-
-    const { error } = await supabase
-      .from("applications")
-      .update({ status: over.id })
-      .eq("id", active.id);
-
-    if (error) {
-      console.error("Error updating status:", error);
-      return;
-    }
-
-    setApplications((prev) =>
-      prev.map((app) =>
-        app.id === active.id
-          ? { ...app, status: over.id as ApplicationStatus }
-          : app
-      )
-    );
-  };
   if (loading) {
     return <p style={{ padding: 24 }}>Loading...</p>;
   }
@@ -134,7 +84,7 @@ function Dashboard({ session }: DashboardProps) {
 
       {/* Status Strip */}
       <div className="status-strip">
-        {kanbanCols.map(({ status, label }) => (
+        {statusStrip.map(({ status, label }) => (
           <button
             key={status}
             type="button"
@@ -153,7 +103,6 @@ function Dashboard({ session }: DashboardProps) {
         ))}
       </div>
 
-      {/* Toolbar */}
       {/* Toolbar */}
       <div className="card toolbar">
         <div className="toolbar-left">
@@ -190,98 +139,52 @@ function Dashboard({ session }: DashboardProps) {
           )}
         </div>
 
-        <div className="view-toggle">
-          <button
-            type="button"
-            className={viewMode === "board" ? "view-btn active" : "view-btn"}
-            onClick={() => setViewMode("board")}
-          >
-            Board
-          </button>
-          <button
-            type="button"
-            className={viewMode === "list" ? "view-btn active" : "view-btn"}
-            onClick={() => setViewMode("list")}
-          >
-            List
-          </button>
-        </div>
+        <Link to="/new" className="btn btn-primary">
+          + New Application
+        </Link>
       </div>
-      {/* Kanban */}
-      {viewMode === "board" && (
-        <DndContext onDragEnd={handleDragEnd}>
-          <div className="kanban-board">
-            {kanbanCols.map(({ status, label }) => {
-              const cards = byStatus(status);
-              return (
-                <KanbanColumn
-                  key={status}
-                  status={status}
-                  label={label}
-                  count={cards.length}
-                >
-                  {cards.length === 0 ? (
-                    <p className="empty-column">No applications</p>
-                  ) : (
-                    cards.map((app) => (
-                      <DraggableCard
-                        key={app.id}
-                        application={app}
-                        onDelete={handleDeleteApplication}
-                      />
-                    ))
-                  )}
-                </KanbanColumn>
-              );
-            })}
-          </div>
-        </DndContext>
-      )}
 
-      {viewMode === "list" && (
-        <div className="card list-view">
-          <table className="app-table">
-            <thead>
-              <tr>
-                <th>Company</th>
-                <th>Position</th>
-                <th>Status</th>
-                <th>Work type</th>
-                <th>Salary</th>
-                <th>Date</th>
-                <th></th>
+      {/* List */}
+      <div className="card list-view">
+        <table className="app-table">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Position</th>
+              <th>Status</th>
+              <th>Work type</th>
+              <th>Salary</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((app) => (
+              <tr key={app.id}>
+                <td>{app.company}</td>
+                <td>{app.position}</td>
+                <td>
+                  <span className={`status status-${app.status.toLowerCase()}`}>
+                    {app.status}
+                  </span>
+                </td>
+                <td>{app.workType ?? "—"}</td>
+                <td>{app.salary || "—"}</td>
+                <td>
+                  {app.status === "Saved"
+                    ? app.applicationDeadline
+                    : app.dateApplied}
+                </td>
+                <td>
+                  <Link to={`/edit/${app.id}`} className="action-link">
+                    Edit
+                  </Link>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filtered.map((app) => (
-                <tr key={app.id}>
-                  <td>{app.company}</td>
-                  <td>{app.position}</td>
-                  <td>
-                    <span
-                      className={`status status-${app.status.toLowerCase()}`}
-                    >
-                      {app.status}
-                    </span>
-                  </td>
-                  <td>{app.workType ?? "—"}</td>
-                  <td>{app.salary || "—"}</td>
-                  <td>
-                    {app.status === "Saved"
-                      ? app.applicationDeadline
-                      : app.dateApplied}
-                  </td>
-                  <td>
-                    <Link to={`/edit/${app.id}`} className="action-link">
-                      Edit
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

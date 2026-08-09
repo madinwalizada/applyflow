@@ -73,11 +73,13 @@ function App() {
             Wishlist
           </NavLink>
         </nav>
-
         <div className="sidebar-footer">
-          <NavLink to="/new" className="btn btn-primary sidebar-new-btn">
-            + New Application
-          </NavLink>
+          <div className="sidebar-profile">
+            <div className="sidebar-avatar">
+              {session.user.email?.[0].toUpperCase()}
+            </div>
+            <span className="sidebar-profile-name">{session.user.email}</span>
+          </div>
           <button
             className="btn btn-secondary btn-sm sidebar-signout"
             onClick={() => supabase.auth.signOut()}
