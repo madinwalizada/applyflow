@@ -40,6 +40,10 @@ function Wishlist({ session }: WishlistProps) {
           salary: item.salary,
           dateApplied: item.date_applied,
           applicationDeadline: item.application_deadline,
+          resumeText: item.resume_text,
+          jobDescription: item.job_description,
+          matchScore: item.match_score,
+          matchData: item.match_data,
         }));
         setItems(mapped);
       }
@@ -93,6 +97,10 @@ function Wishlist({ session }: WishlistProps) {
         salary: data.salary,
         dateApplied: data.date_applied,
         applicationDeadline: data.application_deadline,
+        resumeText: data.resume_text,
+        jobDescription: data.job_description,
+        matchScore: data.match_score,
+        matchData: data.match_data,
       },
       ...prev,
     ]);

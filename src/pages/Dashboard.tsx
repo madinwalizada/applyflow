@@ -38,6 +38,10 @@ function Dashboard({ session }: DashboardProps) {
           salary: item.salary,
           dateApplied: item.date_applied,
           applicationDeadline: item.application_deadline,
+          resumeText: item.resume_text,
+          jobDescription: item.job_description,
+          matchScore: item.match_score,
+          matchData: item.match_data,
         }));
         setApplications(mapped);
       }
