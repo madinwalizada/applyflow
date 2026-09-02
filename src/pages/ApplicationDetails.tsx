@@ -27,9 +27,15 @@ function ApplicationDetails() {
         position: data.position,
         status: data.status,
         location: data.location,
+        workType: data.work_type,
         jobLink: data.job_link,
         salary: data.salary,
         dateApplied: data.date_applied,
+        applicationDeadline: data.application_deadline,
+        resumeText: data.resume_text,
+        jobDescription: data.job_description,
+        matchScore: data.match_score,
+        matchData: data.match_data,
       });
     };
 

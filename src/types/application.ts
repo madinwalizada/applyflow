@@ -17,6 +17,13 @@ export type JobApplication = {
   salary: string;
   dateApplied: string;
   applicationDeadline: string | null;
+  resumeText: string | null;
+  jobDescription: string | null;
+  matchScore: number | null;
+  matchData: {
+    missingKeywords: string[];
+    suggestions: { before: string; after: string }[];
+  } | null;
 };
 
 export type WishlistItem = {

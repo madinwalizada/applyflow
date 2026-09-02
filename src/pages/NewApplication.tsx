@@ -18,6 +18,8 @@ function NewApplication({ session }: NewApplicationProps) {
   const [error, setError] = useState("");
   const [dateApplied, setDateApplied] = useState("");
   const [workType, setWorkType] = useState<WorkType | "">("");
+  const [jobDescription, setJobDescription] = useState("");
+  const [resumeText, setResumeText] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,6 +42,8 @@ function NewApplication({ session }: NewApplicationProps) {
       job_link: jobLink.trim(),
       salary: salary.trim(),
       date_applied: dateApplied,
+      job_description: jobDescription.trim() || null,
+      resume_text: resumeText.trim() || null,
     });
 
     if (error) {
@@ -161,6 +165,31 @@ function NewApplication({ session }: NewApplicationProps) {
               <option value="Saved">Saved</option>
             </select>
           </div>
+
+          <div className="form-group full-width">
+            <label htmlFor="jobDescription">
+              Job description (optional, for AI match)
+            </label>
+            <textarea
+              id="jobDescription"
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              rows={5}
+              placeholder="Paste the job posting text here..."
+            />
+          </div>
+        </div>
+        <div className="form-group full-width">
+          <label htmlFor="resumeText">
+            Resume text (optional, for AI match)
+          </label>
+          <textarea
+            id="resumeText"
+            value={resumeText}
+            onChange={(e) => setResumeText(e.target.value)}
+            rows={5}
+            placeholder="Paste your resume text here..."
+          />
         </div>
 
         <div className="form-actions">
